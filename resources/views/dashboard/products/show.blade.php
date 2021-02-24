@@ -63,14 +63,21 @@ Dashboard
                       </div>
                     </div>
 
+                    @if(!empty($product->size))
                     <div class="row">
                       <div class="col-sm-4">
                         <label class="font-weight-bold">Size</label>
                       </div>
                       <div class="col-sm-8">
-                        <span>{{ $product->size }}</span>
+                        @php
+                          $sizes = json_decode($product->size);
+                        @endphp
+                        @for($i = 0; $i < count($sizes); $i++)
+                        <span>{{ $sizes[$i] }}</span>
+                        @endfor
                       </div>
-                    </div>                                
+                    </div> 
+                    @endif                               
                     
                   </div>
                   <div class="col-md-6">
@@ -104,14 +111,21 @@ Dashboard
                       </div>
                     </div> 
 
+                    @if(!empty($product->color))
                     <div class="row">
                       <div class="col-sm-4">
                         <label class="font-weight-bold">Color</label>
                       </div>
                       <div class="col-sm-8">
-                        <span>{{ $product->color }}</span>
+                        @php
+                          $colors = json_decode($product->color);
+                        @endphp
+                        @for($i = 0; $i < count($colors); $i++)
+                        <span>{{ $colors[$i] }}</span>
+                        @endfor
                       </div>
-                    </div>
+                    </div> 
+                    @endif   
                     
                   </div>
                   

@@ -105,35 +105,33 @@ YouthFireIT | Dashboard
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="price">Size</label>
-            <select class="form-control form-control-lg @error('size') is-invalid @enderror" value="{{ old('size') }}" name="size" id="size" >
-              <option>Select Size</option>
-              <option value="M">M</option>
-              <option value="S">S</option>
-              <option value="XL">XL</option>
-              <option value="XXL">XXL</option>
-            </select>
-            @error('size')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
+            <div class="row">
+              <div class="col-md-8">
+                <label class="form-label" for="price">Size</label>
+              </div>
+              <div class="col-md-4">
+                <a class="btn btn-sm btn-success" id="addSize">Add</a>
+              </div>
+            </div>           
+            <div id="addNewSizeField" class="row pb-1">
+              <div class="col-md-8"><input type="text" class="form-control pb-1 pr-1" name="size[]"></div>
+              <div class="col-md-4"><a id="removeSizeRow" type="button" class="btn btn-sm btn-info">Remove</a></div>              
+            </div>           
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="color">Color</label>
-            <select class="form-control form-control-lg @error('color') is-invalid @enderror" value="{{ old('color') }}" name="color" id="color" >
-              <option>Select Color</option>
-              <option value="Black">Black</option>
-              <option value="Red">Red</option>
-              <option value="Blue">Blue</option>
-              <option value="Green">Green</option>
-            </select>
-            @error('color')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
+            <div class="row">
+              <div class="col-md-8">
+                <label class="form-label" for="price">Color</label>
+              </div>
+              <div class="col-md-4">
+                <a class="btn btn-sm btn-success" id="addColor">Add</a>
+              </div>
+            </div>           
+            <div id="addNewColorField" class="row pb-1">
+              <div class="col-md-8"><input type="text" class="form-control pr-1" name="color[]"></div>
+              <div class="col-md-4"><a id="removeColorRow" type="button" class="btn btn-sm btn-info">Remove</a></div>              
+            </div>           
           </div>
 
           <div class="form-group">
@@ -174,6 +172,52 @@ YouthFireIT | Dashboard
   <script src="{{ asset('/') }}assets/js/libs/editors/summernote.js?ver=1.9.2"></script>
   <script src="{{ asset('/') }}assets/js/editors.js?ver=1.9.2"></script>
   <script type="text/javascript">
+
+    var cnt = 0;
+
+    $(document).ready(function () {
+
+        $('#addSize').on('click', function () {
+          cnt++;
+          $('#addNewSizeField')
+          .eq(0)
+          .clone()
+          .show()
+          .find("input").val("").end() // ***
+          .insertAfter("#addNewSizeField:last-child");
+        });
+      });
+
+    $(document).on('click', '#removeSizeRow', function () {
+      if(cnt >= 1){
+        cnt--;
+        $(this).closest('#addNewSizeField').remove();  
+      }
+
+    });
+
+    var clrCnt = 0;
+    $(document).ready(function () {
+
+        $('#addColor').on('click', function () {
+          clrCnt++;
+          $('#addNewColorField')
+          .eq(0)
+          .clone()
+          .show()
+          .find("input").val("").end() // ***
+          .insertAfter("#addNewColorField:last-child");
+        });
+      });
+
+    $(document).on('click', '#removeColorRow', function () {
+      if(clrCnt >= 1){
+        clrCnt--;
+        $(this).closest('#addNewColorField').remove();  
+      }
+
+    });
+
     function get_sub_cat(id) {
       $.ajaxSetup({
         headers: {
@@ -191,5 +235,8 @@ YouthFireIT | Dashboard
         }
       });
     }
+
+    
+
   </script>
 @endsection

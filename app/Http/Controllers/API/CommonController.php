@@ -10,6 +10,8 @@ use App\Brand;
 use App\Product;
 use DB;
 use App\Wishlist;
+use Auth;
+use App\Cart;
 
 class CommonController extends Controller
 {
@@ -58,12 +60,14 @@ class CommonController extends Controller
     				->select('products.*', 'categories.title as category', 'sub_categories.title as subcategory', 'brands.title as brand')
     				->where('products.id', $id)
     				->first();
-    	return response()->json($product);
+        $colors = json_decode($product->color);
+        $sizes = json_decode($product->size);
+    	return response()->json(['product' => $product, 'colors' => $colors, 'sizes' => $sizes]);
     }
 
     public function add_wishlist($productId)
     {
-    	$userId = Auth()->user()->id;
+    	$userId = Auth::user()->id;
     	$check = Wishlist::where('user_id', $userId)->where('product_id', $productId)->first();
     	if($check){
     		return response()->json([
@@ -79,5 +83,52 @@ class CommonController extends Controller
 	    		'result' => $wish
 	    	]); 
     	}
+    }
+
+    public function add_to_cart(Request $request, $productId)
+    {
+        $product = Product::find($productId);
+        $userId = Auth::user()->id;
+        $check = DB::table('carts')->where('user_id', $userId)->where('product_id', $productId)->first();
+        if($check){
+            $data = [
+                    'qty' => $request->qty,
+                    'size' => $request->size,
+                    'color' => $request->color,
+                    'subtotal' => $check->price*$request->qty
+                ];
+
+                DB::table('carts')->where('id', $check->id)->update($data);
+                return response()->json("Cart Updated Successfully");
+        } else {
+            $data = [];
+            $data = [
+                'product_id' => $productId,
+                'user_id' => $userId,
+                'product_name' => $product->name,
+                'qty' => $request->qty,
+                'price' => $product->price,
+                'size' => $request->size,
+                'color' => $request->color,
+                'subtotal' => $product->price*$request->qty
+            ];
+
+            DB::table('carts')->insert($data);
+            return response()->json("Product Add To Cart Successfully");
+        }
+    }
+
+    public function update_cart(Request $request, $cartId)
+    {
+        $cartProduct = Cart::find($cartId);
+        $data = [
+                'qty' => $request->qty,
+                'size' => $request->size,
+                'color' => $request->color,
+                'subtotal' => $cartProduct->price*$request->qty
+            ];
+
+            DB::table('carts')->where('id', $cartId)->update($data);
+            return response()->json("Cart Updated Successfully");
     }
 }

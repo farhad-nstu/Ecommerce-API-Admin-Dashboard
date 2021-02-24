@@ -31,3 +31,4 @@ Route::get('top/products', 'API\CommonController@get_top_products');
 Route::get('recent/products', 'API\CommonController@get_recent_products');
 Route::get('single-product/{id}', 'API\CommonController@get_single_product');
 Route::get('add-wishlist/{id}', 'API\CommonController@add_wishlist')->middleware('auth:api');
+Route::post('addCart/{id}', 'API\CommonController@add_to_cart')->middleware('auth:api'); //// in here if I don't set middleware('auth:api') then I will not get the authenticated user ///

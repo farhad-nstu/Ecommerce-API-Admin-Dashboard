@@ -9,6 +9,7 @@ use App\SubCategory;
 use App\Brand;
 use App\Product;
 use Intervention\Image\ImageManagerStatic as Image;
+use Auth;
 
 class ProductController extends Controller
 {
@@ -50,8 +51,8 @@ class ProductController extends Controller
         $product->details = $request->details;
         $product->discount_price = $request->discount_price;
         $product->hot_deal = $request->hot_deal;
-        $product->size = $request->size;
-        $product->color = $request->color;
+        $product->size = json_encode($request->size);
+        $product->color = json_encode($request->color);
 
         $results = [];
         $images = $request->file( 'images' );
